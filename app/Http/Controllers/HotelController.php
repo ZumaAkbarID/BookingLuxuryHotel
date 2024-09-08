@@ -53,7 +53,8 @@ class HotelController extends Controller
                 foreach ($request->file('photos') as $photo) {
                     $photoPath = $photo->store('photos/' . date('Y/m/d'), 'public');
                     $hotel->photos()->create([
-                        'photo' => $photoPath
+                        'hotel_id' => $hotel->id,
+                        'photo' => $photoPath,
                     ]);
                 }
             }
