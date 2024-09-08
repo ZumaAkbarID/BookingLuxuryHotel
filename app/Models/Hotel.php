@@ -33,12 +33,12 @@ class Hotel extends Model
 
     public function photos()
     {
-        return $this->belongsTo(HotelPhoto::class);
+        return $this->hasMany(HotelPhoto::class);
     }
 
     public function rooms()
     {
-        return $this->belongsTo(HotelRoom::class);
+        return $this->hasMany(HotelRoom::class);
     }
 
     public function getLowestRoomPrice()

@@ -22,7 +22,7 @@ class StoreRoomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['requried', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'photo' => ['required', 'image', 'mimes:png,jpg,jpeg'],
             'total_people' => ['required', 'integer'],
             'price' => ['required', 'integer']

@@ -53,7 +53,7 @@ class HotelController extends Controller
                 foreach ($request->file('photos') as $photo) {
                     $photoPath = $photo->store('photos/' . date('Y/m/d'), 'public');
                     $hotel->photos()->create([
-                        'hotel_id' => $hotel->id,
+                        // 'hotel_id' => $hotel->id,
                         'photo' => $photoPath,
                     ]);
                 }
@@ -68,7 +68,8 @@ class HotelController extends Controller
      */
     public function show(Hotel $hotel)
     {
-        //
+        $latestPhotos = $hotel->photos()->orderByDesc('id')->take(3)->get();
+        return view('admin.hotels.show', compact('hotel', 'latestPhotos'));
     }
 
     /**
