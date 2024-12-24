@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRoomRequest;
+use App\Http\Requests\UpdateRoomRequest;
 use App\Models\Hotel;
 use App\Models\HotelRoom;
 use Illuminate\Http\Request;
@@ -58,24 +59,39 @@ class HotelRoomController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(HotelRoom $hotelRoom)
+    public function edit(Hotel $hotel, HotelRoom $hotelRoom)
     {
-        //
+        return view('admin.hotel_rooms.edit', compact('hotelRoom', 'hotel'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, HotelRoom $hotelRoom)
+    public function update(UpdateRoomRequest $request, HotelRoom $hotelRoom)
     {
-        //
+        DB::transaction(function () use ($request, $hotelRoom) {
+            $validated = $request->validated();
+
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('photos/' . date('Y/m/d'), 'public');
+                $validated['photo'] = $photoPath;
+            }
+
+            $hotelRoom->update($validated);
+        });
+
+        return redirect()->route('admin.hotels.show', $hotelRoom->hotel_id);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(HotelRoom $hotelRoom)
+    public function destroy(Hotel $hotel, HotelRoom $hotelRoom)
     {
-        //
+        DB::transaction(function () use ($hotelRoom, $hotel) {
+            $hotelRoom->delete();
+        });
+
+        return redirect()->route('admin.hotels.show', $hotel->id);
     }
 }
